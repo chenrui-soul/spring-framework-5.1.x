@@ -270,14 +270,19 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		}
 
 		// Quick check on the concurrent map first, with minimal locking.
+		//起初我以为这个candidateConstructorsCache是用来存储已经推断过构造方法的类存储进去，但其实并不是这个样子的
+		//因为我们Spring绝大部分的类都是单例的所以不会存在二次创建，所以他并不是我们所想的那样子的
+		// 目前已知的一个应用场景是假设有一个创建A()方法和一个创建B()的犯法 A的内部调用了B的方法，因为会创建两次B对象此时就会用到candidateConstructorsCache
 		Constructor<?>[] candidateConstructors = this.candidateConstructorsCache.get(beanClass);
 		if (candidateConstructors == null) {
 			// Fully synchronized resolution now...
 			synchronized (this.candidateConstructorsCache) {
+				//并发检查，也称双重检查,防止当前类已经被其他线程所创建
 				candidateConstructors = this.candidateConstructorsCache.get(beanClass);
 				if (candidateConstructors == null) {
 					Constructor<?>[] rawCandidates;
 					try {
+						//获取当前类的所有构造方法
 						rawCandidates = beanClass.getDeclaredConstructors();
 					}
 					catch (Throwable ex) {
@@ -287,10 +292,13 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					}
 					List<Constructor<?>> candidates = new ArrayList<>(rawCandidates.length);
 					Constructor<?> requiredConstructor = null;
+					//存储默认的构造方法
 					Constructor<?> defaultConstructor = null;
+					//存储主要的构造方法，此方法默认永远会返回为空，我们将寻找主要构造方法的任务委托给了kotlin
 					Constructor<?> primaryConstructor = BeanUtils.findPrimaryConstructor(beanClass);
 					int nonSyntheticConstructors = 0;
 					for (Constructor<?> candidate : rawCandidates) {
+						//判断当前构造方法是不是合成构造方法
 						if (!candidate.isSynthetic()) {
 							nonSyntheticConstructors++;
 						}

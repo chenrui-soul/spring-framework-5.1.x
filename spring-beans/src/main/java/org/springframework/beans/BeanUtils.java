@@ -200,6 +200,7 @@ public abstract class BeanUtils {
 	@Nullable
 	public static <T> Constructor<T> findPrimaryConstructor(Class<T> clazz) {
 		Assert.notNull(clazz, "Class must not be null");
+		//判断是不是kotlin的构造方法肯定是不成立的所以只能返回为null
 		if (KotlinDetector.isKotlinReflectPresent() && KotlinDetector.isKotlinType(clazz)) {
 			Constructor<T> kotlinPrimaryConstructor = KotlinDelegate.findPrimaryConstructor(clazz);
 			if (kotlinPrimaryConstructor != null) {
