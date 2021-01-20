@@ -159,15 +159,21 @@ class ConstructorResolver {
 							"] from ClassLoader [" + beanClass.getClassLoader() + "] failed", ex);
 				}
 			}
-
+			//类中的构造方法只有一个，且没有提供参数
+			//mbd.hasConstructorArgumentValues() 获取参数的
+			//判断是是不够默认构造参数，因为默认构造参数没有提供参数，且在类中只提供一个构造参数
 			if (candidates.length == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				Constructor<?> uniqueCandidate = candidates[0];
 				if (uniqueCandidate.getParameterCount() == 0) {
 					synchronized (mbd.constructorArgumentLock) {
+						//设置这个类的构造方法
 						mbd.resolvedConstructorOrFactoryMethod = uniqueCandidate;
+						//标识这个类已经被解析过了
 						mbd.constructorArgumentsResolved = true;
+						//设置参数为空
 						mbd.resolvedConstructorArguments = EMPTY_ARGS;
 					}
+					//直接调用默认的构造方法
 					bw.setBeanInstance(instantiate(beanName, mbd, uniqueCandidate, EMPTY_ARGS));
 					return bw;
 				}

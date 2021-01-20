@@ -10,8 +10,8 @@ public class UserService {
 		System.out.println("userService start");
 	}
 
-//	@Autowired
-	public UserService(String userName){
+	@Autowired
+	public UserService(OrderService orderService){
 		System.out.println("userService userName");
 	}
 }
