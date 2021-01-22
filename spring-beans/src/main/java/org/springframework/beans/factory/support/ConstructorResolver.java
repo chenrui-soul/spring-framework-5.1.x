@@ -183,7 +183,9 @@ class ConstructorResolver {
 			boolean autowiring = (chosenCtors != null ||
 					mbd.getResolvedAutowireMode() == AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR);
 			ConstructorArgumentValues resolvedValues = null;
-			int minNrOfArgs;
+			//最小的 参数个数 猜测是 min number of args 缩写
+			//表示我在实例化Spring bean的时候找到的构造方法的参数最小要多少
+ 			int minNrOfArgs;
 			if (explicitArgs != null) {
 				minNrOfArgs = explicitArgs.length;
 			}
@@ -192,7 +194,10 @@ class ConstructorResolver {
 				resolvedValues = new ConstructorArgumentValues();
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
-
+			//candidates 的排序规则：
+			//agr 越多的排越前面
+			//修饰符 public > private
+			//agrs的粒度约小越前面 接口>实现类
 			AutowireUtils.sortConstructors(candidates);
 			int minTypeDiffWeight = Integer.MAX_VALUE;
 			Set<Constructor<?>> ambiguousConstructors = null;
