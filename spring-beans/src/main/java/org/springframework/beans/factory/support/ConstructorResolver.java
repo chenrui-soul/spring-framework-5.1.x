@@ -190,8 +190,11 @@ class ConstructorResolver {
 				minNrOfArgs = explicitArgs.length;
 			}
 			else {
+				//一般情况下是为空的，除非我们手动设置
 				ConstructorArgumentValues cargs = mbd.getConstructorArgumentValues();
 				resolvedValues = new ConstructorArgumentValues();
+				//一般情况下默认为0，取决于cargs的个数，也直接影响Spring推断构造方法对构造方法的选择
+				//构造方法的参数大于等于minNrOfArgs
 				minNrOfArgs = resolveConstructorArguments(beanName, mbd, bw, cargs, resolvedValues);
 			}
 			//candidates 的排序规则：
@@ -200,6 +203,8 @@ class ConstructorResolver {
 			//agrs的粒度约小越前面 接口>实现类
 			AutowireUtils.sortConstructors(candidates);
 			int minTypeDiffWeight = Integer.MAX_VALUE;
+			//存储摸棱两可的构造方法，然后再去看这个类是不是是否使用宽松模式
+			//如果是就再去推断，如果宽松模式设置为false就需要使用这个作为判断依据
 			Set<Constructor<?>> ambiguousConstructors = null;
 			LinkedList<UnsatisfiedDependencyException> causes = null;
 
