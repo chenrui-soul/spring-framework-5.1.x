@@ -1191,6 +1191,21 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Candidate constructors for autowiring?
 		//推断构造方法
 		//这里永远返回未空的 除非我们有一天会用到Kotlin技术 才有可能不为空
+		//spring 构造方法实例化对象的原理
+		//首先实例化这个对象-----推断构造方法{
+		// 自动注入 ------ 通过构造方法注入
+		// 手动注入 ------ {
+		//  调用后置处理器determineCandidateConstructors方法，第一次推断构造方法分为一下几种情况：
+		//	1.没有提供可用的构造方法 ----- 可用的构造方法为null ---- 没有提供
+		//	2.如果提供了一个默认的构造方法有且只有一个 ------- null
+		// 	3.多个构造方法 ------ null ------ spring 会迷茫
+		// 	4.多个构造方法 ----- 有一个声明@Auto == true 返回 加了@Auto == true 构造方法
+		//	5.多个构造方法 ----- 多个声明@Auto == true 返回 异常
+		//	6.多个构造方法 ----- 多个声明@Auto == false 返回 多个构造方法 重新推断
+		//	7.提供一个构造方法 ----- 带参数 spring 还是会调用这个构造方法
+		//  }
+		//
+		// }
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
