@@ -1146,6 +1146,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 */
 	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
 		// Make sure bean class is actually resolved at this point.
+		//获取当前bean的类型
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
 
 		//判断这个类是否合法
@@ -1191,6 +1192,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Candidate constructors for autowiring?
 		//推断构造方法
 		//这里永远返回未空的 除非我们有一天会用到Kotlin技术 才有可能不为空
+
 		//spring 构造方法实例化对象的原理
 		//首先实例化这个对象-----推断构造方法{
 		// 自动注入 ------ 通过构造方法注入
