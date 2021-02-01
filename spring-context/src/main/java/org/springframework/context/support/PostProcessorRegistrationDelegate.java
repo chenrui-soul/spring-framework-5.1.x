@@ -83,10 +83,11 @@ final class PostProcessorRegistrationDelegate {
 			//存储当前正在执行的bd
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
-			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
-			//首先，拿到继承BeanDefinitionRegistryPostProcessor的bd
+			//第一次在这里合并bd，合并为MergedBeanDefinition
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
+			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
+			//首先，拿到继承或者实现BeanDefinitionRegistryPostProcessor的bd
 			for (String ppName : postProcessorNames) {
 				//判断他是否又继承了PriorityOrdered，如果继承了，就有优先执行，这也是Spring执行时机的体现
 				if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {

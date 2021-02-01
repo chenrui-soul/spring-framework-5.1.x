@@ -130,6 +130,8 @@ class ConstructorResolver {
 		else {
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
+				//拿到之前实例化对象的构造方法
+				// Spring bean一般都是单例的
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
 				if (constructorToUse != null && mbd.constructorArgumentsResolved) {
 					// Found a cached constructor...
@@ -160,7 +162,7 @@ class ConstructorResolver {
 				}
 			}
 			//类中的构造方法只有一个，且没有提供参数
-			//mbd.hasConstructorArgumentValues() 获取参数的
+			//mbd.hasConstructorArgumentValues() 是获取参数的
 			//判断是是不够默认构造参数，因为默认构造参数没有提供参数，且在类中只提供一个构造参数
 			if (candidates.length == 1 && explicitArgs == null && !mbd.hasConstructorArgumentValues()) {
 				Constructor<?> uniqueCandidate = candidates[0];
@@ -722,7 +724,6 @@ class ConstructorResolver {
 			ConstructorArgumentValues.ValueHolder valueHolder = null;
 			if (resolvedValues != null) {
 				//Spring根据你对应的参数类型注入数据
-
 				valueHolder = resolvedValues.getArgumentValue(paramIndex, paramType, paramName, usedValueHolders);
 				// If we couldn't find a direct match and are not supposed to autowire,
 				// let's try the next generic, untyped argument value as fallback:

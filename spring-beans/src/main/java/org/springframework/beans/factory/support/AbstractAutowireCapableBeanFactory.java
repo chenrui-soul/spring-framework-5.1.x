@@ -125,6 +125,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	private InstantiationStrategy instantiationStrategy = new CglibSubclassingInstantiationStrategy();
 
 	/** Resolver strategy for method parameter names. */
+	//方法参数名称的解析器策略
 	@Nullable
 	private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultParameterNameDiscoverer();
 
@@ -566,6 +567,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
+					//处理合并之后的BeanDefinition
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -578,6 +580,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
+		//判断是否支持循环依赖，默认为true 这也是Spring可以选择修改是否支持循环依赖的原因
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
 				isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
@@ -585,13 +588,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				logger.trace("Eagerly caching bean '" + beanName +
 						"' to allow for resolving potential circular references");
 			}
-			//添加三级缓存
+			//如果支持循环依赖，就提前暴露一个工厂
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
 		// Initialize the bean instance.
 		Object exposedObject = bean;
 		try {
+			//判断属性注入是否需要，继而完成属性注入
 			populateBean(beanName, mbd, instanceWrapper);
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
@@ -1192,7 +1196,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Candidate constructors for autowiring?
 		//推断构造方法
 		//这里永远返回未空的 除非我们有一天会用到Kotlin技术 才有可能不为空
-
 		//spring 构造方法实例化对象的原理
 		//首先实例化这个对象-----推断构造方法{
 		// 自动注入 ------ 通过构造方法注入

@@ -63,7 +63,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		//初始化注册Spring开天辟地的五个类
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		//提供一个Spring扫描类，提供给外部使用
+		//但是Spring内部并不是使用这个类来进行扫描而是重新创建扫描类来进行扫描
+		//这个应该是开闭原则，防止程序员通过api造成程序运行出错
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -157,6 +161,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	@Override
 	public void register(Class<?>... componentClasses) {
 		Assert.notEmpty(componentClasses, "At least one component class must be specified");
+		//我们手动添加的类到BdMap中去
 		this.reader.register(componentClasses);
 	}
 
