@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class TestBeanFactoryPostProcessor implements BeanDefinitionRegistryPostProcessor {
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-//		GenericBeanDefinition orderService = (GenericBeanDefinition)registry.getBeanDefinition("orderService");
-//		orderService.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
+		GenericBeanDefinition orderService = (GenericBeanDefinition)registry.getBeanDefinition("userService");
+		orderService.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
 		System.out.println("李军是傻逼");
 	}
 

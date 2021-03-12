@@ -125,13 +125,14 @@ class ConstructorResolver {
 		Object[] argsToUse = null;
 
 		if (explicitArgs != null) {
+			//将我们手动设置的参数匹配相对应的构造方法
 			argsToUse = explicitArgs;
 		}
 		else {
 			Object[] argsToResolve = null;
 			synchronized (mbd.constructorArgumentLock) {
-				//拿到之前实例化对象的构造方法
-				// Spring bean一般都是单例的
+				//获取bd中的缓存的构造方法和我们提供的工厂方法
+				// Spring Bean一般都是单例的
 				constructorToUse = (Constructor<?>) mbd.resolvedConstructorOrFactoryMethod;
 				if (constructorToUse != null && mbd.constructorArgumentsResolved) {
 					// Found a cached constructor...
@@ -142,6 +143,7 @@ class ConstructorResolver {
 				}
 			}
 			if (argsToResolve != null) {
+				//对参数进行类型转换
 				argsToUse = resolvePreparedArguments(beanName, mbd, bw, constructorToUse, argsToResolve, true);
 			}
 		}

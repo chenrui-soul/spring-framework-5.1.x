@@ -272,7 +272,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 		// Quick check on the concurrent map first, with minimal locking.
 		//起初我以为这个candidateConstructorsCache是用来存储已经推断过构造方法的类存储进去，但其实并不是这个样子的
 		//因为我们Spring绝大部分的类都是单例的所以不会存在二次创建，所以他并不是我们所想的那样子的
-		// 目前已知的一个应用场景是假设有一个创建A()方法和一个创建B()的犯法 A的内部调用了B的方法，因为会创建两次B对象此时就会用到candidateConstructorsCache
+		// 目前已知的一个应用场景是假设有一个创建A()方法和一个创建B()的方法 A的内部调用了B的方法，因为会创建两次B对象此时就会用到candidateConstructorsCache
 		Constructor<?>[] candidateConstructors = this.candidateConstructorsCache.get(beanClass);
 		if (candidateConstructors == null) {
 			// Fully synchronized resolution now...
