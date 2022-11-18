@@ -19,6 +19,7 @@ package org.springframework.http.codec.multipart;
 import java.io.File;
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -128,7 +129,7 @@ public class SynchronossPartHttpMessageReaderTests {
 		FilePart part = (FilePart) parts.getFirst("filePart");
 		assertNotNull(part);
 
-		File dest = File.createTempFile(part.filename(), "multipart");
+		File dest = Files.createTempFile(part.filename(), "multipart").toFile();
 		part.transferTo(dest).block(Duration.ofSeconds(5));
 
 		assertTrue(dest.exists());
